@@ -16,20 +16,24 @@ body {
 /* HOME --------------- HOME ---------------- HOME ---------------- HOME ---------------- HOME ---------------- HOME  */
 
 .home-wrapper {
-    width: 90vw; /* wrappers have 90% of window width */
-    margin-right: auto; /* center wrapper horizontally */
+    width: 90vw;                                    /* wrappers have 90% of window width */
+    margin-right: auto;                             /* center wrapper horizontally */
     margin-left: auto;
-    position: absolute; /* use absolute position ... */
-    top: 50%; /* ... and move wrapper so that the left upper corner fits the centre of the window */
+    position: absolute;                             /* use absolute position ... */
+    top: 50%;                                       /* ... and move wrapper so that the left upper corner fits the centre of the window */
     left: 50%;
-    transform: translate(-50%, -50%); /* move wrapper back so that the center of the wrapper fits the center of the window */
+    transform: translate(-50%, -50%);               /* move wrapper back so that the center of the wrapper fits the center of the window */
     text-align: center;
 }
 .home-poster {
-    padding-left: 1px; /* reset some Bootstrap CSS used for the poster */
+    padding-left: 1px;                              /* reset some Bootstrap CSS used for the poster */
     padding-right: 1px;
     padding-top: 2px;
     float: none;
+}
+
+img {
+    border-radius: 2%;
 }
 
 /* HOME DESKTOP -------------------- HOME DESKTOP -------------------- HOME DESKTOP -------------------- HOME DESKTOP */
@@ -44,7 +48,7 @@ body {
 
 @media (min-device-width: 0px) and (max-device-width: 414px) and (orientation: portrait) and (hover: none) {
     .home-wrapper {
-        height: 100vh;
+        height: 100vh;                                 /* stretch the wrapper to full screen */
     }
     .home-poster {
         width: 50%;
@@ -53,11 +57,11 @@ body {
 
 @media (min-device-width: 415px) and (max-device-width: 1024px) and (orientation: portrait) and (hover: none) {
     .home-wrapper {
-        height: 100vh;
+        height: 100vh;                                 /* stretch the wrapper to full screen */
     }
     .home-poster {
-        width: auto;
         height: 24.5vh;
+        width: auto;
     }
 }
 
@@ -94,12 +98,12 @@ body {
 .info-overview {
     padding-left: 10px !important;
     padding-right: 10px !important;
-    text-align: justify;                /* stretch the overview text  */
+    text-align: justify;                               /* stretch the overview text  */
     text-justify: inter-word;
 }
 
 li {
-    padding: 5px 0 5px 0 !important;        /* reassign Bootstrap CSS */
+    padding: 2px 0 2px 0 !important;                   /* reassign Bootstrap CSS */
 }
 
 .info-left-col {
@@ -110,14 +114,14 @@ li {
 
 @media (pointer: fine) and (hover: hover) {
     .info-wrapper {
-        position: absolute;                                         /* use absolute position ... */
-        top: 50%;                                                   /* ... and move wrapper so that the left upper corner fits the centre of the window */
+        position: absolute;                            /* use absolute position ... */
+        top: 50%;                                      /* ... and move wrapper so that the left upper corner fits the centre of the window */
         left: 50%;
-        /* transform: translate(-50%, -50%); */
+        transform: translate(-50%, -50%);
     }
     .info-content {
         width: 450px;
-        text-align: center;                                         /* center images and text horizontally */
+        text-align: center;                            /* center images and text horizontally */
     }
 }
 
@@ -126,7 +130,7 @@ li {
         width: 100vw;
     }
     .info-content {
-        width: 77%;
+        width: 100%;
         margin-left: auto;
         margin-right: auto;
     }
@@ -142,91 +146,40 @@ li {
 @media (orientation: portrait) and (pointer: coarse) and (hover: none) {
     .info-wrapper {
         width: 100vw;
-        /*position: fixed;*/
     }
     .info-content {
         width: 100%;
-        text-align: center;                 /* center images and text horizontally */
-        /*overflow: auto;*/
+        text-align: center;                            /* center images and text horizontally */
     }
 }
 
-/*@media (min-device-width: 0px) and (max-device-width: 812px) and (orientation: landscape) and (pointer: coarse) and (hover: none) {*/
-    /*.info-wrapper {*/
-        /*height: 100vh;*/
-    /*}*/
-    /*.info-content {*/
-        /*display:table;*/
-        /*height: 100%;*/
-        /*width: 100%;*/
-    /*}*/
-    /*.info-left-col {*/
-        /*display: table-cell;*/
-        /*vertical-align: middle;*/
-        /*padding-top: 10px;*/
-        /*padding-bottom: 10px;*/
-        /*overflow: auto;*/
-    /*}*/
-    /*img {*/
-
-        /*height: 100vh;*/
-    /*}*/
-    /*.info-right-col {*/
-        /*display: table-cell;*/
-        /*!*vertical-align: middle;*!*/
-        /*width: auto;*/
-        /*padding-top: 10px;*/
-        /*padding-bottom: 10px;*/
-        /*padding-left: 10px;*/
-        /*!*float:left;*!*/
-    /*}*/
-    /*.info-list {*/
-        /*height:90vh;*/
-    /*}*/
-    /*.info-title {*/
-        /*font-size: 2em;*/
-    /*}*/
-    /*.poster {*/
-        /*display: none;*/
-    /*}*/
-    /*li {*/
-        /*padding: 2px 0 2px 0 !important;*/
-    /*}*/
-    /*.panel-body {*/
-        /*padding: 0;*/
-        /*!*padding-top: 0;*!*/
-        /*!*padding-left: 10px;*!*/
-        /*!*padding-right: 10px;*!*/
-    /*}*/
-/*}*/
-
-
-/*@media (min-device-width: 812px) and (orientation: landscape) {*/
-    /*.info-content {*/
-        /*width: 100%;*/
-        /*float:left;*/
-    /*}*/
-    /*.info-right-col {*/
-        /*width: 70%;*/
-        /*float: right;*/
-        /*overflow: auto;*/
-    /*}*/
-    /*.info-title {*/
-        /*font-size: 2em;*/
-    /*}*/
-    /*.poster {*/
-        /*display: none;*/
-    /*}*/
-    /*.info-left-col {*/
-        /*width: 25%;*/
-        /*float: left;*/
-        /*padding: 10px;*/
-        /*display: block;*/
-    /*}*/
-    /*ul {*/
-        /*float: left;*/
-    /*}*/
-    /*li {*/
-        /*padding: 2px 0 2px 0 !important;*/
-    /*}*/
-/*}*/
+@media (orientation: landscape) and (pointer: coarse) and (hover: none) {
+    .info-wrapper {
+        width: 100vw;
+        height: 100vh;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .info-content {
+        display:table;                                 /* used to enable the block to fill in the remaining width */
+    }
+    .info-left-col {
+        display: table-cell;
+        height: 100vh;
+    }
+    .info-left-col img {
+        height: 100%;
+    }
+    .poster {
+        display: none;
+    }
+    .info-right-col {
+        display: table-cell;
+        text-align: center;
+        padding-left: 10px;
+        vertical-align: middle;
+    }
+    .panel-body {
+        padding: 0;
+    }
+}
