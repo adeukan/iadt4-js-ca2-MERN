@@ -1,204 +1,176 @@
 import React from 'react';
 import $ from 'jquery';
 import axios from 'axios';
+import {ResizeSensor} from "css-element-queries";
 
 class Info extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {_id: this.props.location.state.movie._id, runtime: ''};
-
+        this.state = {
+            _id: this.props.location.state.movie._id,
+            runtime: '',
+            counter: 0
+        };
         this.handleClick = this.handleClick.bind(this);
         this.updateMovie = this.updateMovie.bind(this);
         this.scaleMovie = this.scaleMovie.bind(this);
-        this.scaleMobile = this.scaleMobile.bind(this);
+        this.scalePortrait = this.scalePortrait.bind(this);
+        this.scaleLandscape = this.scaleLandscape.bind(this);
+        this.resetScaling = this.resetScaling.bind(this);
     }
 
-    // runs after the poster is loaded
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.resetScaling, false);                     // remove window resize listener
+    }
+
+    resetScaling() {
+        console.log("resetScaling()");
+        $('ul').css('cssText', 'zoom:normal;');                                             // clear zoom before next scaling
+        $('.info-wrapper').css('cssText', 'zoom:normal;');
+        this.scaleMovie();
+    }
+
+    // triggered after the poster image is loaded, otherwise the movie div is scaled incorrectly
     // used to scale the movie block to fit the screen
-    // the ready movie object should be passed in at the first rendering, otherwise the movie div is scaled incorrectly
     scaleMovie() {
-        var movieWrapper = $('.info-wrapper');                                              // reference to movie wrapper (or simply 'movie')
-        var movieHeight = movieWrapper.height();                                            // initial movie height (without padding and etc.)
-        var winHeight;                                                                      // window height
-        var heightRatio;                                                                    // ratio between them
-        var self = this;
+        console.log("scaleMovie()");
+        let wrapper = $('.info-wrapper');
 
-        if (WURFL.form_factor === "Desktop") {                                              // WURFL works good at start, but not on the fly
+        this.setState(prevState => ({
+            counter: prevState.counter + 1
+        }), () => {                                                                         // setState callback
 
-            heightRatio = window.innerHeight / movieHeight;                                 // find the ratio and scale 'movie'
-            // 'zoom' is very problematic CSS property
-            // it's impossible to get the correct block height after using the 'zoom'
-            // (CSS 'scale' is not suitable because it doesn't save the form factor of the <ul>, but only wrapper)
-            // so, I have to calculate updated 'movie' height in advance instead of measuring it after zooming
-            movieHeight = movieWrapper.height() * heightRatio;
-            movieWrapper.css('cssText', 'position: absolute;' +                             // scale 'movie'
-                'zoom:' + heightRatio );
-        }
-        else if (WURFL.form_factor === "Smartphone" || WURFL.form_factor === "Tablet") {    // if smart phone
-            this.scaleMobile();                                                             // make calculations and scale 'movie'
-        }
+            if (window.navigator.maxTouchPoints || 'ontouchstart' in document) {            // if mobile
+                if (window.screen.height - window.screen.width > 0)
+                    this.scalePortrait();                                                   // scale in portrait mode
+                else
+                    this.scaleLandscape();                                                  // scale in landscape mode
 
-        var oldWinHeight = window.innerHeight;                                              // initial window & screen sizes
-        var oldWinWidth = window.innerWidth;                                                // used to detect size changes
-        var oldScreenWidth = window.screen.width;
-        var oldScreenHeight = window.screen.height;
-
-        setInterval(function () {                                                           // check size changes and rescale 'movie'
-
-            // if mobile in use and screen has changed (rough detection but the only one that worked for me)
-            if ((window.navigator.maxTouchPoints === 1 /* || 'ontouchstart' in document */ )
-                && (window.screen.width !== oldScreenWidth || window.screen.height !== oldScreenHeight)) {
-
-                self.scaleMobile();                                                         // make calculations and scale 'movie'
-                oldScreenWidth = window.screen.width;                                       // update variables to detect changes next time
-                oldScreenHeight = window.screen.height;
-                oldWinHeight = window.screen.height;
-                oldWinWidth = window.screen.width;
+            } else {                                                                        // if desktop
+                let ratio = window.innerHeight / wrapper.height();                          // window height to 'movie' height ratio
+                wrapper.css('cssText', 'position: absolute;' +                              // scale 'movie'
+                                       'zoom:' + ratio);
             }
-
-            // if desktop in use and window has changed
-            if ((window.navigator.maxTouchPoints !== 1 /* || 'ontouchstart' in document */)
-                && (movieWrapper.height() !== movieHeight || window.innerHeight !== oldWinHeight || oldWinWidth !== window.innerWidth)) {
-
-                movieWrapper.css('cssText', 'zoom: 1;' );                                   // reset zoom value before new scaling
-                winHeight = window.innerHeight;                                             // get actual window height
-                heightRatio = window.innerHeight / movieWrapper.height();                   // find ratio between 'movie' and window height
-                movieWrapper.css('cssText', 'position: absolute;' +                         // and scale 'movie'
-                    'zoom:' + heightRatio );
-
-                oldWinHeight = window.innerHeight;                                          // update variables to detect changes next time
-                oldWinWidth = window.innerWidth;
-                oldScreenWidth = window.screen.width;
-                oldScreenHeight = window.screen.height;
+            if (this.state.counter === 1) {
+                window.addEventListener("resize", this.resetScaling, false);                // window resize listener
+                new ResizeSensor($('.info-content'), this.resetScaling, false);             // movie info-container resize listener
+                // using ResizeSensor leads to an additional number of rendering cycles,
+                // which would be desirable to avoid
             }
-        }, 1000); // end of setInterval()
+        });
     }
 
-    scaleMobile() {
-        var movieWrapper = $('.info-wrapper');                                              // reference to info page wrapper
-        var rightCol = $('.info-right-col');                                                // reference to right col in landscape mode
-        var ulMovie = $('ul');                                                              // reference to unordered list with 'movie' info
-        var poster = $('img');                                                              // reference to poster in landscape mode
-        var newMovieHeight;                                                                 // new 'movie' height after scaling
-        var scale;                                                                          // 'movie' height to screen height ratio (zoom scale)
-        var orientation = ((window.screen.height - window.screen.width) > 0)                // screen orientation
-            ? 'portrait' : 'landscape';
+    scalePortrait() {
+        let ul = $('ul');                                                                   // unordered list with 'movie' info
+        let ulShape = parseFloat((ul.height() / ul.width()).toFixed(2));                    // 'movie' height to length ratio
+        let scrShape = parseFloat((window.screen.height / window.screen.width).toFixed(2)); // screen height to length ratio
+        let scale;                                                                          // the required degree of scaling
 
-        ulMovie.css('cssText', 'zoom: 1;' );                                                // clear zoom values before next scaling
-        movieWrapper.css('cssText', 'zoom: 1;' );
+        // based on system of 2 equations
+        // newUlHeight / newUlWidth = screenShape
+        // newUlHeight + newUlWidth = oldUlHeight + oldUlWidth
+        let newUlWidth = Math.round((ul.height() + ul.width()) / (1 + scrShape));           // new ul width to make ul shape match the screen
 
-        var screenFormfactor = window.screen.height / window.screen.width;                  // screen height to length ratio
-        var movieFormfactor = ulMovie.height() / ulMovie.width();                           // 'movie' height to length ratio
-        var rightColFormfactor = rightCol.height() / rightCol.width();                      // right col height to length ratio
+        // despite the accuracy of calculations, an attempt to set the width using the CSS does not give the desired result,
+        // the problem is the height does not always adjust proportionally to new width,
+        // it all depends on the amount of text inside the list.
+        // so I have to make additional shape checking before scaling the movie
+        if (ulShape > scrShape) {
+            // increase ul width bit by bit to make the ul shape match the screen shape
+            // such a gradual change ensures the height changes proportionally and the entire space is filled with the text
+            for (let i = newUlWidth; i < (newUlWidth + 100); i++) {
+                ul.css('cssText', 'width:' + i + 'px;');
+                ulShape = ul.height() / ul.width();                                         // updated ul shape
 
-        if(orientation === 'portrait') {                                                    // if portrait mode
-
-            // 'movie' height should be reduced to fit the screen form factor
-            if (screenFormfactor < movieFormfactor && (movieFormfactor - screenFormfactor < 0.3)) {
-                movieWrapper.css('cssText', 'position: absolute;' +                         // shift 'movie' to centre
-                                            'top:50%;' +
-                                            'left:50%;' +
-                                            'transform: translate(-50%, -50%);'
-                );
-
-                // direct changing the 'movie' height will not give any result as the <ul> content will not be stretched
-                // instead, I increase the width until reach the desired form factor
-                for(let i = 100; i <= 200; i=i+0.1) {
-                    ulMovie.css('cssText', 'width:' + i + '%;');                            // increase 'movie' width a little
-                    movieFormfactor = ulMovie.height() / ulMovie.width();                   // check new 'movie' form factor
-
-                    // if form factors almost match, find ratio and scale 'movie'
-                    if((screenFormfactor - movieFormfactor) < 0.1 && (screenFormfactor - movieFormfactor) > 0) {
-                        scale = window.screen.height / ulMovie.height();
-                        ulMovie.css('cssText', 'zoom:' + scale * 0.9 + ';');
-                        break;
-                    }
+                if ((scrShape - ulShape) < 0.1 && (scrShape - ulShape) > 0) {               // if ul shape roughly matches the screen
+                    scale = window.screen.height / ul.height();                             // calculate scale level
+                    ul.css('cssText', 'zoom:' + scale + ';');                               // and zoom the ul
+                    break;
                 }
-            }
-            // 'movie' height should be increased to fit the screen form factor (opposite to the described above)
-            else if (screenFormfactor > movieFormfactor) {
-                movieWrapper.css('cssText', 'position: absolute;' +
-                    'top:50%;' +
-                    'left:50%;' +
-                    'transform: translate(-50%, -50%);'
-                );
-                for(let i = 100; i > 0; i=i-0.1) {
-                    ulMovie.css('cssText', 'width:' + i + '%;');
-                    movieFormfactor = ulMovie.height() / ulMovie.width();
-
-                    if((screenFormfactor - movieFormfactor) < 0.1 && (screenFormfactor - movieFormfactor) > 0) {
-                        scale = window.screen.height / ulMovie.height();
-                        ulMovie.css('cssText', 'zoom:' + scale * 0.9 + ';');
-                        break;
-                    }
-                }
-            }
-            // if form factors match
-            else {
-                movieWrapper.css('cssText', 'height: 100vh; position: absolute;');
             }
         }
-
-        // LANDSCAPE (similar to described above)
-        else if(orientation === 'landscape') {
-            scale = rightCol.height() / ulMovie.height();                                   // container height to 'movie' height ratio
-
-            if(rightColFormfactor > movieFormfactor) {
-                for(let i = 100; i > 0; i=i-0.1) {
-                    ulMovie.css('cssText', 'width:' + i + '%;');                            // decrease 'movie' width a little
-                    movieFormfactor = ulMovie.height() / ulMovie.width();
-
-                    // if form factors almost match, find ratio and scale 'movie'
-                    if((rightColFormfactor - movieFormfactor) < 0.08 && (rightColFormfactor - movieFormfactor) > 0) {
-
-                        scale = rightCol.height() / ulMovie.height();
-                        newMovieHeight = ulMovie.height() * scale * 0.87;                   // calculate updated 'movie' height in advance
-                        ulMovie.css('cssText', 'zoom:' + scale * 0.87 + ';');
-                        break;
-                    }
+        // decrease ul width bit by bit to make the ul shape match the screen shape         (the process opposite to described above)
+        else if (ulShape < scrShape) {
+            for (let i = newUlWidth; i > (newUlWidth - 100); i--) {
+                ul.css('cssText', 'width:' + i + 'px;');
+                ulShape = ul.height() / ul.width();
+                if ((scrShape - ulShape) < 0.1 && (scrShape - ulShape) > 0) {
+                    scale = window.screen.height / ul.height();
+                    ul.css('cssText', 'zoom:' + scale + ';');
+                    break;
                 }
             }
-            else if (rightColFormfactor < movieFormfactor) {
-                for(let i = 100; i < 200; i=i+0.1) {
-                    ulMovie.css('cssText', 'width:' + i + '%;');
-                    movieFormfactor = ulMovie.height() / ulMovie.width();
-                    if((rightColFormfactor - movieFormfactor) < 0.08 && (rightColFormfactor - movieFormfactor) > 0) {
-                        newMovieHeight = ulMovie.height() * scale * 0.95;                   // calculate updated 'movie' height in advance
-                        ulMovie.css('cssText', 'zoom:' + scale * 0.95 + ';');
-                        break;
-                    }
-                }
-            }
-            else {
-                newMovieHeight = ulMovie.height() * scale * 0.95;
-                ulMovie.css('cssText', 'zoom:' + scale * 0.95 + ';');
-            }
+        }
+        else {                                                                              // if ul shape matches the screen shape
+            scale = window.screen.height / ul.height();                                     // calculate scale level
+            ul.css('cssText', 'zoom:' + scale + ';');                                       // and zoom movie
+        }
 
-            scale = poster.height() / newMovieHeight;                                       // add appropriate padding for the poster
-            if (scale > 1) {
-                scale = 2 - scale;
-                poster.css('cssText', 'transform: scale(' + scale + ');');
-            }
-            else if (scale < 1) {
-                poster.css('cssText', 'transform: scale(' + scale + ');');
-            }
+        // after zooming, the last word in description could jump to new line,
+        // this may lead to changing the block size again. I just make the scrolling possible here.
+        if (ulShape > scrShape) {
+            $('.info-wrapper').css('cssText', 'position: relative;');
         }
     }
 
-    // CLICK HANDLER
-    // currently works with 'runtime' only, but can be used to handle other fields' clicks
-    handleClick(event) {
-        let name = event.target.getAttribute('name');
-        let value = event.target.getAttribute('value');
+    scaleLandscape() {
+        let ul = $('ul');                                                                   // unordered list with 'movie' info
+        let rightCol = $('.info-right-col');                                                // right col in landscape mode
+        let rightShape = parseFloat((window.screen.height / rightCol.width()).toFixed(2));  // right col height to length ratio
+        let newUlWidth = (ul.height() + ul.width()) / (1 + rightShape);                     // new ul width to make ul shape match the screen
+        let newUlHeight = ul.height() + ul.width() - newUlWidth;                            // new ul height
+        let scale;                                                                          // 'movie' height to screen height ratio (zoom level)
 
-        // prompt user to update the selected field and save result in DB
+        ul.css('cssText', 'width:' + newUlWidth + 'px;');                                   // new ul width to make ul shape match the screen
+        let ulShape = parseFloat((ul.height() / ul.width()).toFixed(2));                    // updated ul form after width changed
+
+        // despite the accuracy of calculations, an attempt to set the width using the CSS does not give the desired result,
+        // the problem is the height does not always adjust proportionally to new width,
+        // it all depends on the amount of text inside the list.
+        // so I have to make additional shape checking before scaling the movie
+        if (ulShape > rightShape) {                                                         // the process is similar to used in portrait mode
+            for (let i = newUlWidth; i < (newUlWidth + 100); i++) {
+                ul.css('cssText', 'width:' + i + 'px;');
+                ulShape = ul.height() / ul.width();
+                if ((rightShape - ulShape) < 0.2 && (rightShape - ulShape) > 0) {
+                    scale = window.screen.height / ul.height();
+                    newUlHeight = ul.height() * scale;                                      // calculate updated 'movie' height in advance
+                    ul.css('cssText', 'zoom:' + scale + ';');
+                    break;
+                }
+            }
+        }
+        else if (rightShape > ulShape) {
+            for (let i = newUlWidth; i > (newUlWidth - 100); i--) {
+                ul.css('cssText', 'width:' + i + 'px;');
+                ulShape = ul.height() / ul.width();
+
+                // if form factors almost match, find ratio and scale 'movie'
+                if ((rightShape - ulShape) < 0.2 && (rightShape - ulShape) > 0) {
+
+                    scale = window.screen.height / ul.height();
+                    newUlHeight = ul.height() * scale;                                      // calculate updated 'movie' height in advance
+                    ul.css('cssText', 'zoom:' + scale + ';');
+                    break;
+                }
+            }
+        }
+        else {
+            scale = window.screen.height / ul.height();
+            ul.css('cssText', 'zoom:' + scale + ';');
+        }
+    }
+
+    handleClick(event) {                                                                    // CLICK HANDLER
+        let name = event.target.getAttribute('name');                                       // currently works with 'runtime' only
+        let value = event.target.getAttribute('value');                                     // but can be used for other fields as well
+
         this.setState({
-            [name]: prompt('Please edit the selected field:', value)
-        }, this.updateMovie);
+            [name]: prompt('Please edit the selected field:', value)                        // prompt user to update the selected field
+        }, this.updateMovie);                                                               // and save result in DB
     }
 
-    // save updated document in DB
-    updateMovie() {
+    updateMovie() {                                                                         // save updated document in DB
         axios.put('/api/movies', this.state)
             .catch(error => {
                 console.log(error);
@@ -206,8 +178,21 @@ class Info extends React.Component {
     }
 
     render() {
+        console.log("render()");
+        let movie,
+            title,
+            runtime,
+            tagline,
+            year,
+            overview,
+            homepage,
+            genreString,
+            genres,
+            countryString,
+            countries,
+            poster,
+            side_poster;
 
-        let movie;
         // if some field is updated by user and then the page is reloaded in the browser,
         // the actual state will be lost and we need to make request to DB to get the updated document
         if (String(window.performance.getEntriesByType("navigation")[0].type) === "reload")
@@ -216,66 +201,64 @@ class Info extends React.Component {
         else
             movie = this.props.location.state.movie;
 
-        if (movie !== null) {
-            // check the movie properties and create html elements where necessary
+        if (movie !== null) {                                                               // check movie properties and create elements
 
-            var poster_url = this.props.location.state.poster_url;
+            let poster_url = this.props.location.state.poster_url;                          // poster
             if (poster_url.length > 30) {
-                var poster = (
+                poster = (
                     <li className="list-group-item poster">
-                        <img src={this.props.location.state.poster_url} className="info-poster" onLoad={this.scaleMovie}
+                        <img src={this.props.location.state.poster_url} className="info-poster"
+                             onLoad={this.scaleMovie}
                              alt="Poster"/>
                     </li>
                 );
-                var side_poster = (
+                side_poster = (
                     <div className="info-left-col">
                         <img src={this.props.location.state.poster_url} className="side_poster" alt="Poster"/>
                     </div>
                 );
             }
 
-            if (movie.info.title !== '')
-                var title = (
+            if (movie.info.title !== '')                                                    // title
+                title = (
                     <li className="list-group-item active info-title">{movie.info.title}</li>
                 );
 
-            // EDITABLE PROPERTY 'RUNTIME'
-            var runtime = null;
-            if (this.state.runtime !== '') {                                        // if runtime was updated by the user
-                runtime = <li className="list-group-item"
+            if (this.state.runtime !== '') {                                                // EDITABLE PROPERTY 'RUNTIME'
+                runtime = <li className="list-group-item"                                   // if runtime was updated by the user
                               name="runtime"
                               value={this.state.runtime}
                               onClick={this.handleClick}> {this.state.runtime} minutes</li>;
             }
-            else if (movie.info.runtime !== '') {                                   // if runtime was not updated by the user
+            else if (movie.info.runtime !== '') {                                           // if runtime was not updated by the user
                 runtime = <li className="list-group-item"
                               name="runtime"
                               value={movie.info.runtime}
                               onClick={this.handleClick}>{movie.info.runtime} minutes</li>;
             }
 
-            if (movie.info.tagline !== '')
-                var tagline = <li className="list-group-item">"{movie.info.tagline}"</li>;
+            if (movie.info.tagline !== '')                                                  // tagline
+                tagline = <li className="list-group-item">"{movie.info.tagline}"</li>;
 
-            if (movie.info.release_date !== '')
-                var year = (
+            if (movie.info.release_date !== '')                                             // release date
+                year = (
                     <li className="list-group-item">{movie.info.release_date.substring(0, 4)}</li>
                 );
 
-            if (movie.info.overview !== '')
-                var overview = (
-                    <li className="list-group-item info-overview"> {movie.info.overview}</li>
+            if (movie.info.overview !== '')                                                 // overview
+                overview = (
+                    <li className="list-group-item info-overview bottom-li"> {movie.info.overview}</li>
                 );
-            if (movie.info.homepage !== null)
-                var homepage = (
+
+            if (movie.info.homepage !== null)                                               // home page
+                homepage = (
                     <li className="list-group-item">
                         <a href={movie.info.homepage}>Home Page</a>
                     </li>
                 );
 
-            var genreString = "";                                                   // get the set of genres and create element
-            if (movie.info.genres.length > 0) {
-                var genres = movie.info.genres;
+            if (movie.info.genres.length > 0) {                                             // genres
+                genres = movie.info.genres;
                 genres.forEach((genre, index) => {
                     genreString = genreString + genre.name;
                     if (genres[index + 1] != null)
@@ -284,9 +267,8 @@ class Info extends React.Component {
                 genres = (<span> {genreString} </span>);
             }
 
-            var countryString = "";                                                 // get the set of countries and create the element
-            if (movie.info.production_countries.length > 0) {
-                var countries = movie.info.production_countries;
+            if (movie.info.production_countries.length > 0) {                               // countries
+                countries = movie.info.production_countries;
                 countries.forEach((country, index) => {
                     countryString = countryString + country.name;
                     if (genres[index + 1] != null)
@@ -296,12 +278,12 @@ class Info extends React.Component {
             }
         }
 
-        return (                                                                    // return the prepared elements if they exist
+        return (                                                                            // return the prepared elements
             <div className="info-wrapper">
                 <div className="info-content">
                     {side_poster != null && side_poster}
                     <div className={"info-right-col"}>
-                        <ul className="list-group panel-body">
+                        <ul className="list-group panel-body" name="movie-list">
                             {title != null && title}
                             {genres != null && <li className="list-group-item"> {genres} </li>}
                             {runtime != null && runtime}
@@ -320,3 +302,7 @@ class Info extends React.Component {
 }
 
 export default Info;
+
+
+// when the ul width was changed, the last word in description could jump to new line,
+// this may lead to changing the block size again, and we have to detect this

@@ -127,7 +127,7 @@ li {
 
 @media (min-width: 0px) and (max-width: 620px) and (pointer: fine) and (hover: hover){
     .info-wrapper {
-        width: 100vw;
+        width: 75vw;
     }
     .info-content {
         width: 100%;
@@ -135,7 +135,7 @@ li {
         margin-right: auto;
     }
 }
-@media (min-width: 0px) and (max-width: 280px) and (pointer: fine) and (hover: hover) {
+@media (min-width: 0px) and (max-width: 320px) and (pointer: fine) and (hover: hover) {
     .info-poster {
         width: 90%;
     }
@@ -151,14 +151,22 @@ li {
         width: 100%;
         text-align: center;                            /* center images and text horizontally */
     }
+    ul {
+        margin-left: auto;
+        margin-right: auto;
+        /*width:99%;*/
+    }
+    .panel-body {
+        padding: 0;
+    }
 }
 
 @media (orientation: landscape) and (pointer: coarse) and (hover: none) {
     .info-wrapper {
         width: 100vw;
         height: 100vh;
-        padding-left: 10px;
-        padding-right: 10px;
+        /*padding-left: 10px;*/
+        /*padding-right: 10px;*/
     }
     .info-content {
         display:table;                                 /* used to enable the block to fill in the remaining width */
@@ -176,7 +184,7 @@ li {
     .info-right-col {
         display: table-cell;
         text-align: center;
-        padding-left: 10px;
+        /*padding-left: 10px;*/
         vertical-align: middle;
     }
     .panel-body {
