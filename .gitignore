@@ -1,5 +1,8 @@
 .vscode
-node_modules
 dist
 *.log
 yarn.lock
+/node_modules
+.DS_Store
+/.env
+.env*.local
