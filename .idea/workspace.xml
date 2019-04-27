@@ -17,8 +17,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="23" column="68" selection-start-line="23" selection-start-column="68" selection-end-line="23" selection-end-column="68" />
+            <state relative-caret-position="323">
+              <caret line="19" column="6" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -59,8 +59,8 @@
       <file leaf-file-name="Info.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/client/Info.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="595">
-              <caret line="60" column="64" selection-start-line="60" selection-start-column="64" selection-end-line="60" selection-end-column="64" />
+            <state relative-caret-position="463">
+              <caret line="45" column="16" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="16" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -71,8 +71,8 @@
       <file leaf-file-name="styles.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/client/styles.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-187">
-              <caret line="41" column="22" lean-forward="true" selection-start-line="41" selection-start-column="22" selection-end-line="41" selection-end-column="22" />
+            <state relative-caret-position="2533">
+              <caret line="149" column="27" selection-start-line="149" selection-start-column="27" selection-end-line="149" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -81,14 +81,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>babel-polyfill</find>
-      <find>title</find>
-      <find>handleClick</find>
-      <find>console.log</find>
-      <find>movieHeight</find>
-      <find>this.props.location.state.movie</find>
-      <find>movieDiv|movieDiv</find>
-      <find>movieDiv</find>
       <find>or</find>
       <find>home</find>
       <find>#root</find>
@@ -111,12 +103,27 @@
       <find>outerHeight(true)</find>
       <find>zoom</find>
       <find>panel</find>
+      <find>INF0</find>
+      <find>MEDIA INFO</find>
+      <find>DESKTOP</find>
+      <find>INFO</find>
+      <find>hover: none</find>
+      <find>setS</find>
+      <find>info-t</find>
+      <find>HOME</find>
     </findStrings>
     <replaceStrings>
       <replace>.home-wrapper</replace>
       <replace>height</replace>
       <replace>innerHeight</replace>
       <replace>height()</replace>
+      <replace>MEDIA HOME</replace>
+      <replace>MEDIA INFO</replace>
+      <replace>INFO DESKTOP MEDIA</replace>
+      <replace>MOBILE</replace>
+      <replace>------</replace>
+      <replace>any-hover: on-demand</replace>
+      <replace>INFO</replace>
     </replaceStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -131,10 +138,10 @@
         <option value="$PROJECT_DIR$/src/client/styles_2.css" />
         <option value="$PROJECT_DIR$/src/client/Movie.js" />
         <option value="$PROJECT_DIR$/src/client/styles_1.css" />
-        <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/src/client/index.js" />
-        <option value="$PROJECT_DIR$/src/client/styles.css" />
+        <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/src/client/Info.js" />
+        <option value="$PROJECT_DIR$/src/client/styles.css" />
       </list>
     </option>
   </component>
@@ -165,7 +172,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -199,11 +205,12 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../ver_04/movies" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -342,26 +349,26 @@
       <workItem from="1555507927369" duration="76204000" />
       <workItem from="1555630199143" duration="5888000" />
       <workItem from="1555639090552" duration="37996000" />
-      <workItem from="1555716389317" duration="25000" />
-      <workItem from="1555726030052" duration="843000" />
-      <workItem from="1555891765215" duration="186000" />
+      <workItem from="1555716416699" duration="38433000" />
+      <workItem from="1555784115829" duration="1090000" />
+      <workItem from="1555891697850" duration="64000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="258062000" />
+    <option name="totallyTimeSpent" value="296595000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="-4" width="1928" height="1039" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.46276596" visible="true" weight="0.1721959" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.46276596" visible="true" weight="0.12848867" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5007899" side_tool="true" weight="0.25164837" />
       <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
       <window_info id="npm" order="2" sideWeight="0.53723407" side_tool="true" weight="0.1421875" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.25934067" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.26043957" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -386,53 +393,53 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="380" />
+      <option name="time" value="463" />
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>movieDiv.height()</expression-string>
+        <expression-string>heightDifferBeforeScale</expression-string>
         <language-id>JavaScript</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>{ratio}</expression-string>
+        <expression-string>Math.abs(movieHeight - window.screen.height)</expression-string>
         <language-id>JavaScript</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>movieDiv.innerHeight</expression-string>
+        <expression-string>window.screen.width</expression-string>
         <language-id>JavaScript</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>WURFL.form_factor</expression-string>
+        <expression-string>movieWidth</expression-string>
         <language-id>JavaScript</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>movieDiv.innerHeight()</expression-string>
+        <expression-string>(movieDiv.innerWidth() * ratio)</expression-string>
         <language-id>JavaScript</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>window.innerHeight</expression-string>
+        <expression-string>movieDiv.width() * ratio</expression-string>
         <language-id>JavaScript</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>(WURFL.form_factor</expression-string>
+        <expression-string>movieDiv.width()</expression-string>
         <language-id>JavaScript</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>this.props.location.state.movie.length</expression-string>
+        <expression-string>(movieDiv.width() * ratio)</expression-string>
         <language-id>JavaScript</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>movie.poster_url</expression-string>
+        <expression-string>movieHeight * ratio</expression-string>
         <language-id>JavaScript</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -568,13 +575,7 @@
     <entry file="file://$PROJECT_DIR$/src/client/App.js" />
     <entry file="file://$PROJECT_DIR$/src/client/CreateUser.js" />
     <entry file="file://$PROJECT_DIR$/src/client/UserList.js" />
-    <entry file="file://$PROJECT_DIR$/src/client/styles_2.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="82" selection-start-line="82" selection-end-line="105" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/client/styles_2.css" />
     <entry file="file://$PROJECT_DIR$/src/client/styles_1.css" />
     <entry file="file://$PROJECT_DIR$/src/server/index.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -605,8 +606,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="68" selection-start-line="23" selection-start-column="68" selection-end-line="23" selection-end-column="68" />
+        <state relative-caret-position="323">
+          <caret line="19" column="6" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
         </state>
       </provider>
     </entry>
@@ -622,15 +623,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/client/styles.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-187">
-          <caret line="41" column="22" lean-forward="true" selection-start-line="41" selection-start-column="22" selection-end-line="41" selection-end-column="22" />
+        <state relative-caret-position="2533">
+          <caret line="149" column="27" selection-start-line="149" selection-start-column="27" selection-end-line="149" selection-end-column="27" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/client/Info.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="60" column="64" selection-start-line="60" selection-start-column="64" selection-end-line="60" selection-end-column="64" />
+        <state relative-caret-position="463">
+          <caret line="45" column="16" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="16" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>

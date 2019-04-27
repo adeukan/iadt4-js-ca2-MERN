@@ -13,7 +13,9 @@ body {
       height: 100vh;
   }
 
-.home-wrapper, .info-wrapper {
+/* HOME --------------- HOME ---------------- HOME ---------------- HOME ---------------- HOME ---------------- HOME  */
+
+.home-wrapper {
     width: 90vw; /* wrappers have 90% of window width */
     margin-right: auto; /* center wrapper horizontally */
     margin-left: auto;
@@ -23,7 +25,6 @@ body {
     transform: translate(-50%, -50%); /* move wrapper back so that the center of the wrapper fits the center of the window */
     text-align: center;
 }
-
 .home-poster {
     padding-left: 1px; /* reset some Bootstrap CSS used for the poster */
     padding-right: 1px;
@@ -31,167 +32,174 @@ body {
     float: none;
 }
 
-.info-content {
-    width: 450px;
-    height: auto;
-    /* center the text and image horizontally within the 'info-wrapper' */
-    text-align: center; /* center images and text horizontally */
-    /* center the 'info-wrapper' horizontally within the 'root' */
-    margin-right: auto;
-    margin-left: auto;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    overflow: auto;
+/* HOME DESKTOP -------------------- HOME DESKTOP -------------------- HOME DESKTOP -------------------- HOME DESKTOP */
 
+@media (max-width: 991.5px) and (pointer: fine) and (hover: hover){
+    .home-wrapper {
+        height: 100vh;
+    }
 }
 
-.info-right-col .panel-body {
-    padding: 5px 0 5px 0;
+/* HOME MOBILE --------------------- HOME MOBILE ---------------------- HOME MOBILE --------------------- HOME MOBILE */
+
+@media (min-device-width: 0px) and (max-device-width: 414px) and (orientation: portrait) and (hover: none) {
+    .home-wrapper {
+        height: 100vh;
+    }
+    .home-poster {
+        width: 50%;
+    }
 }
 
-.info-left-col {
-    display: none;
+@media (min-device-width: 415px) and (max-device-width: 1024px) and (orientation: portrait) and (hover: none) {
+    .home-wrapper {
+        height: 100vh;
+    }
+    .home-poster {
+        width: auto;
+        height: 24.5vh;
+    }
 }
 
-/*ul {*/
-    /*margin-top: 0;*/
-    /*margin-bottom: 0 !important;*/
-/*}*/
-
-li {
-    /* reassign Bootstrap CSS */
-    padding: 5px 0 5px 0 !important;
+@media (min-device-width: 0px) and (max-device-width: 568px) and (orientation: landscape) and (hover: none) {
+    .home-wrapper {
+        height: 100vh !important;
+    }
+    .home-poster {
+        width: auto;
+        height: 48vh;
+    }
 }
+
+@media (min-device-width: 569px) and (max-device-width: 823px) and (orientation: landscape) and (hover: none) {
+    .home-wrapper {
+        height: auto !important;
+    }
+    .home-poster {
+        width: 16.66%;
+        height: auto;
+    }
+}
+
+/* INFO --------------- INFO ---------------- INFO ---------------- INFO ---------------- INFO ---------------- INFO  */
 
 .list-group {
     margin-bottom: 0;
 }
 
 .info-title {
-    font-size: 4vh;
+    font-size: 1.5em;
 }
 
 .info-overview {
     padding-left: 10px !important;
     padding-right: 10px !important;
-    /* stretch the overview text  */
-    text-align: justify;
+    text-align: justify;                /* stretch the overview text  */
     text-justify: inter-word;
 }
 
-/* ------------------------------------------------------------------------*/
-
-@media (max-width: 991.5px) and (pointer: fine) {
-    .home-wrapper {
-        height: 100vh;
-    }
+li {
+    padding: 5px 0 5px 0 !important;        /* reassign Bootstrap CSS */
 }
 
-@media (min-width: 0px) and (max-width: 640px) and (pointer: fine) {
+.info-left-col {
+    display: none;
+}
+
+/* INFO DESKTOP -------------------- INFO DESKTOP -------------------- INFO DESKTOP -------------------- INFO DESKTOP */
+
+@media (pointer: fine) and (hover: hover) {
+    .info-wrapper {
+        position: absolute;                                         /* use absolute position ... */
+        top: 50%;                                                   /* ... and move wrapper so that the left upper corner fits the centre of the window */
+        left: 50%;
+        /* transform: translate(-50%, -50%); */
+    }
     .info-content {
-        width: auto;
-        height: 100%;
+        width: 450px;
+        text-align: center;                                         /* center images and text horizontally */
     }
 }
 
-@media (min-width: 0px) and (max-width: 380px) and (pointer: fine) {
+@media (min-width: 0px) and (max-width: 620px) and (pointer: fine) and (hover: hover){
+    .info-wrapper {
+        width: 100vw;
+    }
+    .info-content {
+        width: 77%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+@media (min-width: 0px) and (max-width: 280px) and (pointer: fine) and (hover: hover) {
     .info-poster {
-        width: 80vw;
-    }
-}
-
-/* ------------------------------------------------------------------------*/
-
-@media (min-device-width: 0px) and (max-device-width: 414px) and (orientation: portrait) {
-    .home-wrapper {
-        height: 100vh;
-    }
-
-    .home-poster {
-        width: 50%;
-    }
-}
-
-@media (min-device-width: 0px) and (max-device-width: 1024px) and (orientation: portrait) and (pointer: coarse) {
-    .info-content {
         width: 90%;
     }
-
-    .info-poster {
-        width: 50%;
-    }
-
-    .info-title {
-        font-size: 1.5em;
-    }
-
-    li {
-        padding: 2px 0 2px 0 !important;
-    }
 }
 
+/* INFO MOBILE --------------------- INFO MOBILE ---------------------- INFO MOBILE --------------------- INFO MOBILE */
 
-
-
-
-
-
-
-
-
-
-@media (min-device-width: 0px) and (max-device-width: 812px) and (orientation: landscape) and (pointer: coarse) {
+@media (orientation: portrait) and (pointer: coarse) and (hover: none) {
     .info-wrapper {
-        height: 100vh;
+        width: 100vw;
+        /*position: fixed;*/
     }
     .info-content {
-        display:table;
-        height: 100%;
         width: 100%;
-    }
-    .info-left-col {
-        display: table-cell;
-        vertical-align: middle;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        overflow: auto;
-    }
-    img {
-
-       height: 100vh;
-    }
-    .info-right-col {
-        display: table-cell;
-        /*vertical-align: middle;*/
-        width: auto;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        padding-left: 10px;
-        /*float:left;*/
-    }
-    .info-list {
-        height:90vh;
-    }
-    .info-title {
-        font-size: 2em;
-    }
-    .poster {
-        display: none;
-    }
-    li {
-        padding: 2px 0 2px 0 !important;
-    }
-    .panel-body {
-        padding: 0;
-        /*padding-top: 0;*/
-        /*padding-left: 10px;*/
-        /*padding-right: 10px;*/
+        text-align: center;                 /* center images and text horizontally */
+        /*overflow: auto;*/
     }
 }
 
+/*@media (min-device-width: 0px) and (max-device-width: 812px) and (orientation: landscape) and (pointer: coarse) and (hover: none) {*/
+    /*.info-wrapper {*/
+        /*height: 100vh;*/
+    /*}*/
+    /*.info-content {*/
+        /*display:table;*/
+        /*height: 100%;*/
+        /*width: 100%;*/
+    /*}*/
+    /*.info-left-col {*/
+        /*display: table-cell;*/
+        /*vertical-align: middle;*/
+        /*padding-top: 10px;*/
+        /*padding-bottom: 10px;*/
+        /*overflow: auto;*/
+    /*}*/
+    /*img {*/
 
+        /*height: 100vh;*/
+    /*}*/
+    /*.info-right-col {*/
+        /*display: table-cell;*/
+        /*!*vertical-align: middle;*!*/
+        /*width: auto;*/
+        /*padding-top: 10px;*/
+        /*padding-bottom: 10px;*/
+        /*padding-left: 10px;*/
+        /*!*float:left;*!*/
+    /*}*/
+    /*.info-list {*/
+        /*height:90vh;*/
+    /*}*/
+    /*.info-title {*/
+        /*font-size: 2em;*/
+    /*}*/
+    /*.poster {*/
+        /*display: none;*/
+    /*}*/
+    /*li {*/
+        /*padding: 2px 0 2px 0 !important;*/
+    /*}*/
+    /*.panel-body {*/
+        /*padding: 0;*/
+        /*!*padding-top: 0;*!*/
+        /*!*padding-left: 10px;*!*/
+        /*!*padding-right: 10px;*!*/
+    /*}*/
+/*}*/
 
-/*fgfgfgfgfgjhp*/
 
 /*@media (min-device-width: 812px) and (orientation: landscape) {*/
     /*.info-content {*/
@@ -222,48 +230,3 @@ li {
         /*padding: 2px 0 2px 0 !important;*/
     /*}*/
 /*}*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-@media (min-device-width: 415px) and (max-device-width: 1024px) and (orientation: portrait) {
-    .home-wrapper {
-        height: 100vh;
-    }
-
-    .home-poster {
-        width: auto;
-        height: 24.5vh;
-    }
-}
-
-@media (min-device-width: 0px) and (max-device-width: 568px) and (orientation: landscape) {
-    .home-wrapper {
-        height: 100vh !important;
-    }
-
-    .home-poster {
-        width: auto;
-        height: 48vh;
-    }
-}
-
-@media (min-device-width: 569px) and (max-device-width: 823px) and (orientation: landscape) {
-    .home-wrapper {
-        height: auto !important;
-    }
-
-    .home-poster {
-        width: 16.66%;
-        height: auto;
-    }
-}

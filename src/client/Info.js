@@ -16,39 +16,78 @@ class Info extends React.Component {
     // used to scale the movie block to fit the screen
     // the filled movie object should be passed in at the first rendering, otherwise the movie div is scaled incorrectly
     scaleMovie() {
-        let movieDiv = $('.info-content');                           // reference to movie div
-        let movieHeight = movieDiv.height();                         // initial movie height (without padding, margin and borders)
-        let winHeight;                                               // window height
-        let ratio;                                                   // ratio between them
+        var movieDiv = $('.info-wrapper');                           // reference to movie div
+        var movieWidth = movieDiv.width();
+        var movieHeight = movieDiv.height();                         // initial movie height (without padding, margin and borders)
+        var winHeight;                                               // window height
+        var heightRatio;                                                   // ratio between them
+        var widthRatio;
 
         if (WURFL.form_factor === "Desktop") {
-            ratio = window.innerHeight / movieHeight;
-            movieDiv.css({zoom: ratio});                             // scale movie
-            movieHeight = movieDiv.height();                         // save actual movie height (to further track changes)
+            heightRatio = window.innerHeight / movieHeight;
+            movieDiv.css('transform', 'translate(-50%, -50%) scale(' + heightRatio + ')');                             // scale movie
         }
         else if (WURFL.form_factor === "Smartphone" || WURFL.form_factor === "Tablet") {
-            ratio = window.screen.height / movieHeight;              // ratio between screen height and movie height
-            movieDiv.css({zoom: ratio});
-            movieHeight = movieDiv.height();                         // save actual movie height (to further track changes)
+
+            heightRatio = window.screen.height / movieHeight;              // ratio between screen height and movie height
+            widthRatio = window.screen.width / movieWidth;
+            var heightDifferBeforeScale = movieHeight - window.screen.height;
+            var widthDifferAfterScale = movieWidth * widthRatio - window.screen.width;
+
+
+            // if (heightDifferBeforeScale > 0 && heightDifferBeforeScale < 150 && widthDifferAfterScale > 2) {
+            //     movieDiv.css('cssText', 'position: absolute;' +
+            //                             'top:50%;' +
+            //                             'left:50%;' +
+            //                             'transform: translate(-50%, -50%) scale(' + heightRatio + ');' +
+            //                             'width:' + (movieWidth * widthRatio) + 'px;' +
+            //                             'position:fixed;');
+            //     console.log("1");
+            // }
+            if (heightDifferBeforeScale > 0 && heightDifferBeforeScale < 150) {
+                movieDiv.css('cssText', 'position: absolute;' +
+                                        'top:50%;' +
+                                        'left:50%;' +
+                                        'transform: translate(-50%, -50%) scale(' + heightRatio + ');' +
+                                        'position:fixed;');
+                console.log("2");
+            }
+            // else if (widthDifferAfterScale > 2) {
+            //     movieDiv.css('cssText', 'width:' + (movieWidth * widthtRatio) + 'px;');
+            //     console.log("3");
+            // }
+            else if (heightDifferBeforeScale < 0) {
+                movieDiv.css('cssText', 'position: absolute;' +
+                    'top:50%;' +
+                    'left:50%;' +
+                    'transform: translate(-50%, -50%) scale(' + heightRatio * .9 + ');' +
+                    'width:' + (movieWidth / heightRatio) + 'px;' +
+                    'position:fixed;');
+                console.log("4");
+            }
+            else {
+                movieDiv.css('cssText', 'position: absolute;');
+                console.log("5");
+            }
         }
 
-        let oldWinHeight = window.innerHeight;                       // initial size of window and screen
-        let oldWinWidth = window.innerWidth;
-        let oldScreenWidth = window.screen.width;
-        let oldScreenHeight = window.screen.height;
+        var oldWinHeight = window.innerHeight;                       // initial size of window and screen
+        var oldWinWidth = window.innerWidth;
+        var oldScreenWidth = window.screen.width;
+        var oldScreenHeight = window.screen.height;
 
         setInterval(function () {                                    // rescale movie if screen changed or window (or movie) were resized
             let screenWidth = window.screen.width;                   // actual screen width
             let screenHeight = window.screen.height;                 // actual screen height
 
-            // check whether the screen has changed
-            if ((WURFL.form_factor == "Smartphone" || WURFL.form_factor == "Tablet") && (screenWidth !== oldScreenWidth || screenHeight !== oldScreenHeight)) {
+            // check whether the mobile screen has changed
+            if ((window.navigator.maxTouchPoints || 'ontouchstart' in document) && (screenWidth !== oldScreenWidth || screenHeight !== oldScreenHeight)) {
 
-                movieDiv.css({zoom: 1});                             // restore initial zoom
-                movieHeight = movieDiv.height();                     // get actual movie height
-                ratio = window.screen.height / movieHeight;          // get actual ratio
-                movieDiv.css({zoom: ratio});                         // rescale movie
-                movieHeight = movieDiv.height();                     // save actual movie height (to further track changes)
+                // movieDiv.css('transform', 'scale(1)');                             // restore initial scale
+                // movieHeight = movieDiv.height();                     // get actual movie height
+                heightRatio = window.screen.height / movieHeight;          // get actual ratio
+                movieDiv.css('transform', 'translate(-50%, -50%) scale(' + heightRatio + ')');                         // rescale movie
+                // movieHeight = movieDiv.height();                     // save actual movie height (to further track changes)
 
                 oldScreenWidth = screenWidth;                        // update variables for next use
                 oldScreenHeight = screenHeight;
@@ -58,13 +97,13 @@ class Info extends React.Component {
             }
 
             // check whether the window or movie were resized in desktop mode
-            if (WURFL.form_factor == "Desktop" && (movieDiv.height() !== movieHeight || window.innerHeight !== oldWinHeight || oldWinWidth !== window.innerWidth)) {
+            if (!(window.navigator.maxTouchPoints || 'ontouchstart' in document) && (movieDiv.height() !== movieHeight || window.innerHeight !== oldWinHeight || oldWinWidth !== window.innerWidth)) {
 
-                movieDiv.css({zoom: 1});
-                movieHeight = movieDiv.height();
+                // movieDiv.css('transform', 'scale(1)');
+                // movieHeight = movieDiv.height();
                 winHeight = window.innerHeight;
-                ratio = window.innerHeight / movieHeight;
-                movieDiv.css({zoom: ratio});
+                heightRatio = window.innerHeight / movieDiv.height();
+                movieDiv.css('transform', 'translate(-50%, -50%) scale(' + heightRatio + ')');
                 movieHeight = movieDiv.height();                     // save actual movie height (to further track changes)
 
                 oldWinHeight = window.innerHeight;                   // update variables for next use
