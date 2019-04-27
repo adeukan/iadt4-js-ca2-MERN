@@ -8,24 +8,24 @@
 /** * * * * * * * { outline: 1px solid blue; }*/
 
 body {
-    /* use the full height of the browser window,
-    it allows to center the child element vertically on the window */
-    height: 100vh;
-}
+      /* use the full height of the browser window,
+      it allows to center the child element vertically on the window */
+      height: 100vh;
+  }
 
 .home-wrapper, .info-wrapper {
-    width: 90vw;                        /* wrappers have 90% of window width */
-    margin-right: auto;                 /* center wrapper horizontally */
+    width: 90vw; /* wrappers have 90% of window width */
+    margin-right: auto; /* center wrapper horizontally */
     margin-left: auto;
-    position: absolute;                 /* use absolute position ... */
-    top: 50%;                           /* ... and move wrapper so that the left upper corner fits the centre of the window */
+    position: absolute; /* use absolute position ... */
+    top: 50%; /* ... and move wrapper so that the left upper corner fits the centre of the window */
     left: 50%;
-    transform: translate(-50%, -50%);   /* move wrapper back so that the center of the wrapper fits the center of the window */
+    transform: translate(-50%, -50%); /* move wrapper back so that the center of the wrapper fits the center of the window */
     text-align: center;
 }
 
 .home-poster {
-    padding-left: 1px;      /* reset some Bootstrap CSS used for the poster */
+    padding-left: 1px; /* reset some Bootstrap CSS used for the poster */
     padding-right: 1px;
     padding-top: 2px;
     float: none;
@@ -35,24 +35,36 @@ body {
     width: 450px;
     height: auto;
     /* center the text and image horizontally within the 'info-wrapper' */
-    text-align: center;             /* center images and text horizontally */
+    text-align: center; /* center images and text horizontally */
     /* center the 'info-wrapper' horizontally within the 'root' */
     margin-right: auto;
     margin-left: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow: auto;
+
+}
+
+.info-right-col .panel-body {
+    padding: 5px 0 5px 0;
 }
 
 .info-left-col {
-    display:none;
+    display: none;
 }
 
-ul {
-    margin-top: 0;
-    margin-bottom: 0 !important;
-}
+/*ul {*/
+    /*margin-top: 0;*/
+    /*margin-bottom: 0 !important;*/
+/*}*/
 
 li {
     /* reassign Bootstrap CSS */
     padding: 5px 0 5px 0 !important;
+}
+
+.list-group {
+    margin-bottom: 0;
 }
 
 .info-title {
@@ -67,24 +79,24 @@ li {
     text-justify: inter-word;
 }
 
-
 /* ------------------------------------------------------------------------*/
 
-@media (max-width: 991.5px) {
+@media (max-width: 991.5px) and (pointer: fine) {
     .home-wrapper {
         height: 100vh;
     }
 }
 
-@media (min-width: 0px) and (max-width: 480px){
+@media (min-width: 0px) and (max-width: 640px) and (pointer: fine) {
     .info-content {
-        width: 90vw;
+        width: auto;
+        height: 100%;
     }
 }
 
-@media (min-width: 0px) and (max-width: 380px) {
+@media (min-width: 0px) and (max-width: 380px) and (pointer: fine) {
     .info-poster {
-        width: 80%;
+        width: 80vw;
     }
 }
 
@@ -94,47 +106,113 @@ li {
     .home-wrapper {
         height: 100vh;
     }
+
     .home-poster {
         width: 50%;
     }
 }
 
-@media (min-device-width: 0px) and (max-device-width: 480px) and (orientation: portrait) and (pointer:coarse) {
+@media (min-device-width: 0px) and (max-device-width: 1024px) and (orientation: portrait) and (pointer: coarse) {
     .info-content {
         width: 90%;
     }
+
     .info-poster {
         width: 50%;
     }
+
     .info-title {
         font-size: 1.5em;
     }
+
     li {
         padding: 2px 0 2px 0 !important;
     }
 }
 
 
-/*@media (orientation: landscape) and (pointer:coarse) {*/
+
+
+
+
+
+
+
+
+
+@media (min-device-width: 0px) and (max-device-width: 812px) and (orientation: landscape) and (pointer: coarse) {
+    .info-wrapper {
+        height: 100vh;
+    }
+    .info-content {
+        display:table;
+        height: 100%;
+        width: 100%;
+    }
+    .info-left-col {
+        display: table-cell;
+        vertical-align: middle;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        overflow: auto;
+    }
+    img {
+
+       height: 100vh;
+    }
+    .info-right-col {
+        display: table-cell;
+        /*vertical-align: middle;*/
+        width: auto;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 10px;
+        /*float:left;*/
+    }
+    .info-list {
+        height:90vh;
+    }
+    .info-title {
+        font-size: 2em;
+    }
+    .poster {
+        display: none;
+    }
+    li {
+        padding: 2px 0 2px 0 !important;
+    }
+    .panel-body {
+        padding: 0;
+        /*padding-top: 0;*/
+        /*padding-left: 10px;*/
+        /*padding-right: 10px;*/
+    }
+}
+
+
+
+/*fgfgfgfgfgjhp*/
+
+/*@media (min-device-width: 812px) and (orientation: landscape) {*/
     /*.info-content {*/
-        /*height: 100%;*/
         /*width: 100%;*/
+        /*float:left;*/
     /*}*/
-    /*.info-list {*/
-        /*width: 60%;*/
-        /*float:right;*/
+    /*.info-right-col {*/
+        /*width: 70%;*/
+        /*float: right;*/
         /*overflow: auto;*/
     /*}*/
     /*.info-title {*/
         /*font-size: 2em;*/
     /*}*/
-    /*.central_poster {*/
+    /*.poster {*/
         /*display: none;*/
     /*}*/
-    /*.side_poster {*/
-        /*height: 100%;*/
-        /*width: 39%;*/
-        /*float:left;*/
+    /*.info-left-col {*/
+        /*width: 25%;*/
+        /*float: left;*/
+        /*padding: 10px;*/
         /*display: block;*/
     /*}*/
     /*ul {*/
@@ -146,10 +224,22 @@ li {
 /*}*/
 
 
+
+
+
+
+
+
+
+
+
+
+
 @media (min-device-width: 415px) and (max-device-width: 1024px) and (orientation: portrait) {
     .home-wrapper {
         height: 100vh;
     }
+
     .home-poster {
         width: auto;
         height: 24.5vh;
@@ -160,6 +250,7 @@ li {
     .home-wrapper {
         height: 100vh !important;
     }
+
     .home-poster {
         width: auto;
         height: 48vh;
@@ -170,6 +261,7 @@ li {
     .home-wrapper {
         height: auto !important;
     }
+
     .home-poster {
         width: 16.66%;
         height: auto;

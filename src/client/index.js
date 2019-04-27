@@ -5,6 +5,7 @@ import axios from 'axios';
 import Movie from './Movie';
 import Info from './Info';
 import './styles.css';
+import $ from "jquery";
 
 class MovieList extends React.Component {
   constructor(props) {
@@ -40,19 +41,6 @@ class MovieList extends React.Component {
     return (<div className="panel-body home-wrapper"> {movieList} </div>);
   }
 } // end of MovieList component
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class App extends React.Component {
   render() {

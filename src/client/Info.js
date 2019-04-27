@@ -9,35 +9,46 @@ class Info extends React.Component {
 
         this.handleClick = this.handleClick.bind(this);
         this.updateMovie = this.updateMovie.bind(this);
+        this.scaleMovie = this.scaleMovie.bind(this);
     }
 
-    // runs once after component is mounted
+    // runs after the poster is loaded
     // used to scale the movie block to fit the screen
     // the filled movie object should be passed in at the first rendering, otherwise the movie div is scaled incorrectly
-    componentDidMount() {
+    scaleMovie() {
+        let movieDiv = $('.info-content');                           // reference to movie div
+        let movieHeight = movieDiv.height();                         // initial movie height (without padding, margin and borders)
+        let winHeight;                                               // window height
+        let ratio;                                                   // ratio between them
 
-        let movieDiv = $('.info-content');                           // reference to movie div (hereinafter - movie)
-        let winHeight = window.innerHeight;                          // initial window height
-        let movieHeight = movieDiv.innerHeight();                    // initial movie height
-        let ratio = winHeight / movieHeight;                         // ratio between them
-        movieDiv.css({zoom: ratio});                                 // scale movie
-        movieHeight = movieDiv.innerHeight();                       // actual movie height after scaling (without zoom)
+        if (WURFL.form_factor === "Desktop") {
+            ratio = window.innerHeight / movieHeight;
+            movieDiv.css({zoom: ratio});                             // scale movie
+            movieHeight = movieDiv.height();                         // save actual movie height (to further track changes)
+        }
+        else if (WURFL.form_factor === "Smartphone" || WURFL.form_factor === "Tablet") {
+            ratio = window.screen.height / movieHeight;              // ratio between screen height and movie height
+            movieDiv.css({zoom: ratio});
+            movieHeight = movieDiv.height();                         // save actual movie height (to further track changes)
+        }
 
         let oldWinHeight = window.innerHeight;                       // initial size of window and screen
         let oldWinWidth = window.innerWidth;
         let oldScreenWidth = window.screen.width;
         let oldScreenHeight = window.screen.height;
 
-        setInterval(function () {                                    // rescale movie if screen changed or window or movie were resized
+        setInterval(function () {                                    // rescale movie if screen changed or window (or movie) were resized
             let screenWidth = window.screen.width;                   // actual screen width
             let screenHeight = window.screen.height;                 // actual screen height
 
             // check whether the screen has changed
-            if (screenWidth !== oldScreenWidth || screenHeight !== oldScreenHeight) {
-                movieHeight = movieDiv.innerHeight();                // get actual movie height
-                ratio = screenHeight / movieHeight;
+            if ((WURFL.form_factor == "Smartphone" || WURFL.form_factor == "Tablet") && (screenWidth !== oldScreenWidth || screenHeight !== oldScreenHeight)) {
+
+                movieDiv.css({zoom: 1});                             // restore initial zoom
+                movieHeight = movieDiv.height();                     // get actual movie height
+                ratio = window.screen.height / movieHeight;          // get actual ratio
                 movieDiv.css({zoom: ratio});                         // rescale movie
-                movieHeight = movieDiv.innerHeight();                // actual movie height after scaling (without zoom)
+                movieHeight = movieDiv.height();                     // save actual movie height (to further track changes)
 
                 oldScreenWidth = screenWidth;                        // update variables for next use
                 oldScreenHeight = screenHeight;
@@ -46,19 +57,20 @@ class Info extends React.Component {
                 return;                                              // early exit
             }
 
-            // check whether the window or movie were resized
-            if (movieDiv.innerHeight() !== movieHeight || window.innerHeight !== oldWinHeight || oldWinWidth !== window.innerWidth) {
+            // check whether the window or movie were resized in desktop mode
+            if (WURFL.form_factor == "Desktop" && (movieDiv.height() !== movieHeight || window.innerHeight !== oldWinHeight || oldWinWidth !== window.innerWidth)) {
 
-                movieHeight = movieDiv.innerHeight();                // actual movie height (without zoom)
-                winHeight = window.innerHeight;                      // actual window height
-                ratio = winHeight / movieHeight;
-                movieDiv.css({zoom: ratio});                         // rescale movie
-                movieHeight = movieDiv.innerHeight();                // actual movie height after scaling (without zoom)
+                movieDiv.css({zoom: 1});
+                movieHeight = movieDiv.height();
+                winHeight = window.innerHeight;
+                ratio = window.innerHeight / movieHeight;
+                movieDiv.css({zoom: ratio});
+                movieHeight = movieDiv.height();                     // save actual movie height (to further track changes)
 
                 oldWinHeight = window.innerHeight;                   // update variables for next use
                 oldWinWidth = window.innerWidth;
             }
-        }, 200);
+        }, 100);
     }
 
     handleClick(event) {
@@ -94,12 +106,13 @@ class Info extends React.Component {
             if (poster_url.length > 30) {
                 var poster = (
                     <li className="list-group-item poster">
-                        <img src={this.props.location.state.poster_url} className="info-poster" alt="Poster"/>
+                        <img src={this.props.location.state.poster_url} className="info-poster" onLoad={this.scaleMovie}
+                             alt="Poster"/>
                     </li>
                 );
                 var side_poster = (
                     <div className="info-left-col">
-                        <img src={this.props.location.state.poster_url} alt="Poster"/>
+                        <img src={this.props.location.state.poster_url} className="side_poster" alt="Poster"/>
                     </div>
                 );
             }
