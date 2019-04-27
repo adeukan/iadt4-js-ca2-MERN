@@ -6,18 +6,16 @@ const bodyParser = require('body-parser');
 const server = express();
 const dbname = 'IMDBLocal';
 
-
 server.use(express.static('dist'));
 
-const dbroute = process.env.MONGODB_URL            // URL to DB
-|| `mongodb://localhost:27017/${dbname}`;
-
+const dbroute = process.env.DB_URL                            // URL to DB
+    || `mongodb://localhost:27017/${dbname}`;
 
 let db;
 MongoClient.connect(dbroute, (err, client) => {               // start express server after connection to DB
    if (err) throw err;
    db = client.db(dbname);
-   server.listen(8080, () => console.log('Started on 8080')); // start the server on port 8080
+   server.listen(process.env.PORT || 8080, () => console.log(`Started on ${process.env.PORT}`));        // start server
 });
 
 server.use(bodyParser.urlencoded({extended: false}));         // used to parse the request body (api request may not work without it)

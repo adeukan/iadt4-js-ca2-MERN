@@ -192,7 +192,7 @@ class Info extends React.Component {
       // if some field is updated by user and then the page is reloaded in the browser,
       // the actual state will be lost and we need to make request to DB to get the updated document
       if (String(window.performance.getEntriesByType('navigation')[0].type) === 'reload')
-      // Todo: get request to DB to get updated movie object and replace next line
+         // Todo: get request to DB to get updated movie object and replace next line
          movie = this.props.location.state.movie;
       else
          movie = this.props.location.state.movie;
