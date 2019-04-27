@@ -27,7 +27,7 @@ class Movie extends React.Component {
                 <Link to={{ pathname: '/info',
                   state: { movie: this.props.movie, poster_url: poster_url }
                 }}>
-                  <img src={poster_url} className="home-poster col-sm-3 col-md-2" alt="Poster"/>
+                  <img src={poster_url} className="home-poster col-md-2" alt="Poster"/>
                 </Link>;
     }
 

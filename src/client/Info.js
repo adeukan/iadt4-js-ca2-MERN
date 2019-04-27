@@ -1,117 +1,196 @@
 import React from 'react';
 import $ from 'jquery';
-import './styles.css';
+import axios from 'axios';
 
 class Info extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {_id: this.props.location.state.movie._id, runtime: ''};
 
-  // runs once after component is mounted
-  // used to scale the movie block to fit the screen
-  componentDidMount() {
-    let windowHeight = $(window).height();                // current window height
-    let movieHeight = $('.info-wrapper').height();        // movie div height
-    let ratio = windowHeight / movieHeight;               // ratio between them
-    $('.info-wrapper').css({ zoom: ratio });              // scale the movie div using the ratio
-
-    $(window).resize(function() {                         // scale the movie div if window resized
-      windowHeight = $(window).height();                  // check the updated window height
-      let ratio = windowHeight / movieHeight;
-      $('.info-wrapper').css({ zoom: ratio });
-    });
-
-    let prevScreenWidth = window.screen.width;            // previous values of screen and window width
-    let prevScreenHeight = $(window).height();
-
-    setInterval(function() {                              // check the screen changes and scale the movie block
-      let currentScreenWidth = window.screen.width;       // current values of screen width and height
-      let currentScreenHeight = $(window).height();
-
-      // if window or screen width were changed, rescale the movie info div
-      if(currentScreenWidth !== prevScreenWidth || currentScreenHeight !== prevScreenHeight ) {
-        let windowHeight = $(window).height();            // current window height
-        let movieHeight = $('.info-wrapper').height();    // movie div height
-        let ratio = windowHeight / movieHeight;           // ratio between them
-        $('.info-wrapper').css({ zoom: ratio });          // scale the movie div using the ratio
-
-        if(currentScreenWidth !== prevScreenWidth)        // update previous values
-          prevScreenWidth = currentScreenWidth;
-        else
-          prevScreenHeight = currentScreenHeight;
-      }
-    }, 200);
-  }
-
-  render() {
-    if (this.props.location.state.movie !== null) {
-      // check the movie properties and create elements if needed
-      if (this.props.location.state.poster_url.length > 30)
-        var poster = (
-          <li className="list-group-item">
-            <img src={this.props.location.state.poster_url} className="info-poster" alt="posterPath" />
-          </li>
-        );
-      if (this.props.location.state.movie.title !== '')
-        var title = (
-          <li className="list-group-item active info-title">{this.props.location.state.movie.title}</li>
-        );
-      if (this.props.location.state.movie.info.runtime !== '')
-        var runtime = <li className="list-group-item">{this.props.location.state.movie.info.runtime} minutes</li>;
-      if (this.props.location.state.movie.info.tagline !== '')
-        var tagline = <li className="list-group-item">"{this.props.location.state.movie.info.tagline}"</li>;
-      if (this.props.location.state.movie.info.release_date !== '')
-        var year = (
-          <li className="list-group-item">{this.props.location.state.movie.info.release_date.substring(0, 4)}</li>
-        );
-      if (this.props.location.state.movie.overview !== '')
-        var overview = (
-          <li className="list-group-item info-overview"> {this.props.location.state.movie.overview}</li>
-        );
-      if (this.props.location.state.movie.info.homepage !== null)
-        var homepage = (
-          <li className="list-group-item">
-            <a href={this.props.location.state.movie.info.homepage}>Home Page</a>
-          </li>
-        );
-
-      // get the set of genres and create the element if needed
-      if (this.props.location.state.movie.info.genres.length > 0) {
-        var genres = this.props.location.state.movie.info.genres;
-        genres = genres.map((genre, index) => (
-          <span key={genre.id}>
-            <span>{genre.name}</span>
-            {genres[index + 1] != null && <span>&nbsp;|&nbsp;</span>}
-          </span>
-        ));
-      }
-
-      // get the set of countries and create the element if needed
-      if (this.props.location.state.movie.info.production_countries.length > 0) {
-        var countries = this.props.location.state.movie.info.production_countries;
-        countries = countries.map((country, index) => (
-          <span key={index}>
-            <span>{country.name}</span>
-            {countries[index + 1] != null && <span>&nbsp;|&nbsp;</span>}
-          </span>
-        ));
-      }
+        this.handleClick = this.handleClick.bind(this);
+        this.updateMovie = this.updateMovie.bind(this);
     }
 
-    // return the prepared elements if they exist
-    return (
-      <div className="info-wrapper">
-        <ul className="list-group panel-body list">
-          {title != null && title}
-          {genres != null && <li className="list-group-item"> {genres} </li>}
-          {runtime != null && runtime}
-          {poster != null && poster}
-          {tagline != null && tagline}
-          {homepage != null && homepage}
-          {countries != null && <li className="list-group-item"> {countries} </li>}
-          {year != null && year}
-          {overview != null && overview}
-        </ul>
-      </div>
-    );
-  }
+    // runs once after component is mounted
+    // used to scale the movie block to fit the screen
+    // the filled movie object should be passed in at the first rendering, otherwise the movie div is scaled incorrectly
+    componentDidMount() {
+
+        let movieDiv = $('.info-content');                           // reference to movie div (hereinafter - movie)
+        let winHeight = window.innerHeight;                          // initial window height
+        let movieHeight = movieDiv.innerHeight();                    // initial movie height
+        let ratio = winHeight / movieHeight;                         // ratio between them
+        movieDiv.css({zoom: ratio});                                 // scale movie
+        movieHeight = movieDiv.innerHeight();                       // actual movie height after scaling (without zoom)
+
+        let oldWinHeight = window.innerHeight;                       // initial size of window and screen
+        let oldWinWidth = window.innerWidth;
+        let oldScreenWidth = window.screen.width;
+        let oldScreenHeight = window.screen.height;
+
+        setInterval(function () {                                    // rescale movie if screen changed or window or movie were resized
+            let screenWidth = window.screen.width;                   // actual screen width
+            let screenHeight = window.screen.height;                 // actual screen height
+
+            // check whether the screen has changed
+            if (screenWidth !== oldScreenWidth || screenHeight !== oldScreenHeight) {
+                movieHeight = movieDiv.innerHeight();                // get actual movie height
+                ratio = screenHeight / movieHeight;
+                movieDiv.css({zoom: ratio});                         // rescale movie
+                movieHeight = movieDiv.innerHeight();                // actual movie height after scaling (without zoom)
+
+                oldScreenWidth = screenWidth;                        // update variables for next use
+                oldScreenHeight = screenHeight;
+                oldWinHeight = window.screen.height;
+                oldWinWidth = window.screen.width;
+                return;                                              // early exit
+            }
+
+            // check whether the window or movie were resized
+            if (movieDiv.innerHeight() !== movieHeight || window.innerHeight !== oldWinHeight || oldWinWidth !== window.innerWidth) {
+
+                movieHeight = movieDiv.innerHeight();                // actual movie height (without zoom)
+                winHeight = window.innerHeight;                      // actual window height
+                ratio = winHeight / movieHeight;
+                movieDiv.css({zoom: ratio});                         // rescale movie
+                movieHeight = movieDiv.innerHeight();                // actual movie height after scaling (without zoom)
+
+                oldWinHeight = window.innerHeight;                   // update variables for next use
+                oldWinWidth = window.innerWidth;
+            }
+        }, 200);
+    }
+
+    handleClick(event) {
+        let name = event.target.getAttribute('name');
+        let value = event.target.getAttribute('value');
+
+        this.setState({
+            [name]: prompt('Please edit the selected field:', value)
+        }, this.updateMovie);
+    }
+
+    updateMovie() {
+        axios.put('/api/movies', this.state)
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    render() {
+
+        let movie;
+        if (String(window.performance.getEntriesByType("navigation")[0].type) === "reload")
+        // Todo: get request to DB to get updated movie object and replace next line
+            movie = this.props.location.state.movie;
+        else
+            movie = this.props.location.state.movie;
+
+
+        if (movie !== null) {
+
+            // check the movie properties and create elements if needed
+            var poster_url = this.props.location.state.poster_url;
+            if (poster_url.length > 30) {
+                var poster = (
+                    <li className="list-group-item poster">
+                        <img src={this.props.location.state.poster_url} className="info-poster" alt="Poster"/>
+                    </li>
+                );
+                var side_poster = (
+                    <div className="info-left-col">
+                        <img src={this.props.location.state.poster_url} alt="Poster"/>
+                    </div>
+                );
+            }
+
+
+            if (movie.info.title !== '')
+                var title = (
+                    <li className="list-group-item active info-title">{movie.info.title}</li>
+                );
+
+            // EDITABLE PROPERTY
+            var runtime = null;
+            if (this.state.runtime !== '') {
+                runtime = <li className="list-group-item"
+                              name="runtime"
+                              value={this.state.runtime}
+                              onClick={this.handleClick}> {this.state.runtime} minutes</li>;
+            }
+            else if (movie.info.runtime !== '') {
+                runtime = <li className="list-group-item"
+                              name="runtime"
+                              value={movie.info.runtime}
+                              onClick={this.handleClick}>{movie.info.runtime} minutes</li>;
+            }
+
+            if (movie.info.tagline !== '')
+                var tagline = <li className="list-group-item">"{movie.info.tagline}"</li>;
+
+            if (movie.info.release_date !== '')
+                var year = (
+                    <li className="list-group-item">{movie.info.release_date.substring(0, 4)}</li>
+                );
+
+            if (movie.info.overview !== '')
+                var overview = (
+                    <li className="list-group-item info-overview"> {movie.info.overview}</li>
+                );
+            if (movie.info.homepage !== null)
+                var homepage = (
+                    <li className="list-group-item">
+                        <a href={movie.info.homepage}>Home Page</a>
+                    </li>
+                );
+
+            // get the set of genres and create the element if needed
+            var genreString = "";
+            if (movie.info.genres.length > 0) {
+                var genres = movie.info.genres;
+                genres.forEach((genre, index) => {
+                    genreString = genreString + genre.name;
+                    if (genres[index + 1] != null)
+                        genreString = genreString + " | ";
+                });
+                genres = (<span> {genreString} </span>);
+            }
+
+            // get the set of countries and create the element if needed
+            var countryString = "";
+            if (movie.info.production_countries.length > 0) {
+                var countries = movie.info.production_countries;
+                countries.forEach((country, index) => {
+                    countryString = countryString + country.name;
+                    if (genres[index + 1] != null)
+                        countryString = countryString + " | ";
+                });
+                countries = (<span> {countryString} </span>);
+            }
+        }
+
+        // return the prepared elements if they exist
+        return (
+            <div className="info-wrapper">
+                <div className="info-content">
+                    {side_poster != null && side_poster}
+                    <div className={"info-right-col"}>
+                        <ul className="list-group panel-body info-list">
+                            {title != null && title}
+                            {genres != null && <li className="list-group-item"> {genres} </li>}
+                            {runtime != null && runtime}
+                            {poster != null && poster}
+                            {tagline != null && tagline}
+                            {homepage != null && homepage}
+                            {countries != null && <li className="list-group-item"> {countries} </li>}
+                            {year != null && year}
+                            {overview != null && overview}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default Info;

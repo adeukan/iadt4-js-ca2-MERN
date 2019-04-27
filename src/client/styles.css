@@ -1,39 +1,48 @@
+/** { outline: 2px dotted red; }*/
+/** * { outline: 2px dotted green; }*/
+/** * * { outline: 2px dotted orange; }*/
+/** * * * { outline: 2px dotted blue; }*/
+/** * * * * { outline: 1px solid red; }*/
+/** * * * * * { outline: 1px solid green; }*/
+/** * * * * * * { outline: 1px solid orange; }*/
+/** * * * * * * * { outline: 1px solid blue; }*/
+
 body {
     /* use the full height of the browser window,
-    it allows to center the child element verticaly on the window */
+    it allows to center the child element vertically on the window */
     height: 100vh;
 }
 
-#root {
-	/* the 'root' has 90% of the browser width */
-    width: 90vw;
-    height: auto;
-	/* center the 'root' horizontally within the 'body' */
-    margin-right: auto;
+.home-wrapper, .info-wrapper {
+    width: 90vw;                        /* wrappers have 90% of window width */
+    margin-right: auto;                 /* center wrapper horizontally */
     margin-left: auto;
-    /* use absolute position ... */
-    position: absolute;
-    /* ... and move the root so that the left upper corner of the root fits the center of the window */
-    top: 50%;
+    position: absolute;                 /* use absolute position ... */
+    top: 50%;                           /* ... and move wrapper so that the left upper corner fits the centre of the window */
     left: 50%;
-    /* move the root back so that the center of the root fits the center of the window */
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);   /* move wrapper back so that the center of the wrapper fits the center of the window */
+    text-align: center;
 }
 
-.home-wrapper {
-	/* center a row of images horizontally within the 'home-wrapper' */
-	text-align: center;
+.home-poster {
+    padding-left: 1px;      /* reset some Bootstrap CSS used for the poster */
+    padding-right: 1px;
+    padding-top: 2px;
+    float: none;
 }
 
-.info-wrapper {
-
-    width: 500px;
+.info-content {
+    width: 450px;
     height: auto;
     /* center the text and image horizontally within the 'info-wrapper' */
-    text-align: center;
+    text-align: center;             /* center images and text horizontally */
     /* center the 'info-wrapper' horizontally within the 'root' */
     margin-right: auto;
     margin-left: auto;
+}
+
+.info-left-col {
+    display:none;
 }
 
 ul {
@@ -41,20 +50,9 @@ ul {
     margin-bottom: 0 !important;
 }
 
-/* browser width up to 550px */
-@media (max-width: 550px) {
-    .info-wrapper {
-        width: 300px;
-        height: auto;
-    }
-}
-
-/* reset some Bootstrap CSS used for the poster */
-.home-poster{
-    padding-left: 1px;
-    padding-right: 1px;
-    padding-top:2px;
-    float: none;
+li {
+    /* reassign Bootstrap CSS */
+    padding: 5px 0 5px 0 !important;
 }
 
 .info-title {
@@ -69,186 +67,111 @@ ul {
     text-justify: inter-word;
 }
 
-li {
-    /* reassign Bootstrap CSS */
-    padding: 5px 0 5px 0 !important;
+
+/* ------------------------------------------------------------------------*/
+
+@media (max-width: 991.5px) {
+    .home-wrapper {
+        height: 100vh;
+    }
 }
 
-/* landscape mode and width between 1025px and 1366px */
-@media (max-device-width: 1366px) and (min-aspect-ratio: 1/1) {
-    #root {
-        width: 100vw;
+@media (min-width: 0px) and (max-width: 480px){
+    .info-content {
+        width: 90vw;
     }
-    .info-wrapper {
-         /* use almost full width of the device */
-        width: 95%;
-        height: auto;
-    }
-    .home-poster{
-        /* 3 posters in the row */
-        width: 33%;
-        height: auto;
-    }
+}
+
+@media (min-width: 0px) and (max-width: 380px) {
     .info-poster {
-        width: 20%;
-    }
-    .info-title {
-        font-size: 4em;
-    }
-    li {
-        font-size: 2em;
-        /* reassign Bootstrap CSS */
-        padding: 2px 0 2px 0 !important;
+        width: 80%;
     }
 }
 
-/* landscape mode and width between 826px and 1024px */
-@media (max-device-width: 1024px) and (min-aspect-ratio: 1/1) {
-    #root {
-        width: 100vw;
+/* ------------------------------------------------------------------------*/
+
+@media (min-device-width: 0px) and (max-device-width: 414px) and (orientation: portrait) {
+    .home-wrapper {
+        height: 100vh;
     }
-    .info-wrapper {
+    .home-poster {
+        width: 50%;
+    }
+}
+
+@media (min-device-width: 0px) and (max-device-width: 480px) and (orientation: portrait) and (pointer:coarse) {
+    .info-content {
         width: 90%;
-        height: auto;
-    }
-    .home-poster{
-        width: 33%;
-        height: auto;
-    }
-    .info-poster {
-        width: 20%;
-    }
-    .info-title {
-        font-size: 2.2em;
-    }
-    li {
-        font-size: 1.3em;
-        padding: 2px 0 2px 0 !important;
-    }
-}
-
-/* landscape mode and width up to 825px */
-@media (max-device-width: 825px) and (min-aspect-ratio: 1/1) {
-    #root {
-        width: 100vw;
-    }
-    .info-wrapper {
-        width: auto;
-        height: 100vh;
-    }
-    .home-poster{
-        width: 16.16%;
-        height: auto;
-    }
-    .info-poster {
-        width: 12%;
-    }
-    .info-title {
-        font-size: 1.8em;
-    }
-    li {
-        font-size: 1.4em;
-        padding: 2px 0 2px 0 !important;
-    }
-}
-
-/* portrait mode and width between 1025px and 1366px */
-@media (max-device-width: 1366px) and (max-aspect-ratio: 1/1) {
-    #root {
-        width: 100vw;
-    }
-    .info-wrapper {
-        width: 80vw;
-        height: auto;
-    }
-    .home-poster{
-        width: 33.33%;
-        height: auto;
-    }
-    .info-poster {
-        width: 30vw;
-    }
-    .info-title {
-        font-size: 3em;
-    }
-    li {
-        font-size: 2em;
-        padding: 2px 0 2px 0 !important;
-    }
-}
-
-/* portrait mode and width between 769px and 1024px */
-@media (max-device-width: 1024px) and (max-aspect-ratio: 1/1) {
-    #root {
-        width: 100vw;
-    }
-    .info-wrapper {
-        width: 70vw;
-        height: auto;
-    }
-    .home-poster{
-        width: 33.33%;
-        height: auto;
-    }
-    .info-poster {
-        width: 30%;
-    }
-    .info-title {
-        font-size: 3em;
-    }
-    li {
-        font-size: 2em;
-        padding: 2px 0 2px 0 !important;
-    }
-}
-
-/* portrait mode and width between 441 and 768px */
-@media (max-device-width: 768px) and (max-aspect-ratio: 1/1) {
-    #root {
-        width: 100vw;
-    }
-    .info-wrapper {
-        width: auto;
-        height: 100vh;
-    }
-    .home-poster{
-        width: 33.33%;
-        height: auto;
-    }
-    .info-poster {
-        width: 30%;
-    }
-    .info-title {
-        font-size: 3em;
-    }
-    li {
-        font-size: 2em;
-        padding: 2px 0 2px 0 !important;
-    }
-}
-
-/* portrait mode and width up to 440px */
-@media (max-device-width: 440px) and (max-aspect-ratio: 1/1) {
-    #root {
-        width: 100vw;
-    }
-    .info-wrapper {
-        width: auto;
-        height: 100vh;
-    }
-    .home-poster{
-    	/* 1 poster in the row */
-        width: 100%;
-        height: auto;
     }
     .info-poster {
         width: 50%;
     }
     .info-title {
-        font-size: 4em;
+        font-size: 1.5em;
     }
     li {
-        font-size: 3em;
         padding: 2px 0 2px 0 !important;
+    }
+}
+
+
+/*@media (orientation: landscape) and (pointer:coarse) {*/
+    /*.info-content {*/
+        /*height: 100%;*/
+        /*width: 100%;*/
+    /*}*/
+    /*.info-list {*/
+        /*width: 60%;*/
+        /*float:right;*/
+        /*overflow: auto;*/
+    /*}*/
+    /*.info-title {*/
+        /*font-size: 2em;*/
+    /*}*/
+    /*.central_poster {*/
+        /*display: none;*/
+    /*}*/
+    /*.side_poster {*/
+        /*height: 100%;*/
+        /*width: 39%;*/
+        /*float:left;*/
+        /*display: block;*/
+    /*}*/
+    /*ul {*/
+        /*float: left;*/
+    /*}*/
+    /*li {*/
+        /*padding: 2px 0 2px 0 !important;*/
+    /*}*/
+/*}*/
+
+
+@media (min-device-width: 415px) and (max-device-width: 1024px) and (orientation: portrait) {
+    .home-wrapper {
+        height: 100vh;
+    }
+    .home-poster {
+        width: auto;
+        height: 24.5vh;
+    }
+}
+
+@media (min-device-width: 0px) and (max-device-width: 568px) and (orientation: landscape) {
+    .home-wrapper {
+        height: 100vh !important;
+    }
+    .home-poster {
+        width: auto;
+        height: 48vh;
+    }
+}
+
+@media (min-device-width: 569px) and (max-device-width: 823px) and (orientation: landscape) {
+    .home-wrapper {
+        height: auto !important;
+    }
+    .home-poster {
+        width: 16.66%;
+        height: auto;
     }
 }
