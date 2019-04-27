@@ -6,7 +6,6 @@ import Movie from './Movie';
 import Info from './Info';
 import './styles.css';
 
-
 class MovieList extends React.Component {
   constructor(props) {
     super(props);
@@ -16,18 +15,16 @@ class MovieList extends React.Component {
 
   // runs once after component is mounted
   componentDidMount() {
-    // url query for all popular movies
-    let url =
-            'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=a3abe9699d800e588cb2a57107b4179c';
-    // get all popular movies from TMDb
-    axios
-      .get(url)
-      .then((response) => {
-        // store the movies in state
-        this.setState({movies: response.data.results});
+    this.updateMovies();
+  }
+
+  updateMovies() {
+    axios.get('api/movies')
+      .then(response => {
+        this.setState({ movies: response.data });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(error => {
+        console.log(error);
       });
   }
 
@@ -36,14 +33,25 @@ class MovieList extends React.Component {
     const movieList = this.state.movies.slice(0, 12).map(movie => (
       <Movie
         key={movie.id}
-        id={movie.id}
-        poster_id={movie.poster_path}
+        movie={movie}
       />
     ));
 
     return (<div className="panel-body home-wrapper"> {movieList} </div>);
   }
 } // end of MovieList component
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class App extends React.Component {

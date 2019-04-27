@@ -53,28 +53,28 @@ class Info extends React.Component {
         var title = (
           <li className="list-group-item active info-title">{this.props.location.state.movie.title}</li>
         );
-      if (this.props.location.state.movie.runtime !== '')
-        var runtime = <li className="list-group-item">{this.props.location.state.movie.runtime} minutes</li>;
-      if (this.props.location.state.movie.tagline !== '')
-        var tagline = <li className="list-group-item">"{this.props.location.state.movie.tagline}"</li>;
-      if (this.props.location.state.movie.release_date !== '')
+      if (this.props.location.state.movie.info.runtime !== '')
+        var runtime = <li className="list-group-item">{this.props.location.state.movie.info.runtime} minutes</li>;
+      if (this.props.location.state.movie.info.tagline !== '')
+        var tagline = <li className="list-group-item">"{this.props.location.state.movie.info.tagline}"</li>;
+      if (this.props.location.state.movie.info.release_date !== '')
         var year = (
-          <li className="list-group-item">{this.props.location.state.movie.release_date.substring(0, 4)}</li>
+          <li className="list-group-item">{this.props.location.state.movie.info.release_date.substring(0, 4)}</li>
         );
       if (this.props.location.state.movie.overview !== '')
         var overview = (
           <li className="list-group-item info-overview"> {this.props.location.state.movie.overview}</li>
         );
-      if (this.props.location.state.movie.homepage !== null)
+      if (this.props.location.state.movie.info.homepage !== null)
         var homepage = (
           <li className="list-group-item">
-            <a href={this.props.location.state.movie.homepage}>Home Page</a>
+            <a href={this.props.location.state.movie.info.homepage}>Home Page</a>
           </li>
         );
 
       // get the set of genres and create the element if needed
-      if (this.props.location.state.movie.genres.length > 0) {
-        var genres = this.props.location.state.movie.genres;
+      if (this.props.location.state.movie.info.genres.length > 0) {
+        var genres = this.props.location.state.movie.info.genres;
         genres = genres.map((genre, index) => (
           <span key={genre.id}>
             <span>{genre.name}</span>
@@ -84,8 +84,8 @@ class Info extends React.Component {
       }
 
       // get the set of countries and create the element if needed
-      if (this.props.location.state.movie.production_countries.length > 0) {
-        var countries = this.props.location.state.movie.production_countries;
+      if (this.props.location.state.movie.info.production_countries.length > 0) {
+        var countries = this.props.location.state.movie.info.production_countries;
         countries = countries.map((country, index) => (
           <span key={index}>
             <span>{country.name}</span>
