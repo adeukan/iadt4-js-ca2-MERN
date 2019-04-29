@@ -6,17 +6,46 @@ import {ResizeSensor} from 'css-element-queries';
 class Info extends React.Component {
    constructor(props) {
       super(props);
-      this.state = {
-         _id: this.props.location.state.movie._id,
-         runtime: '',
-         counter: 0
-      };
+
+      // if page was refreshed in browser the state will be initialised from the sessionStorage
+      // I'm forced to store 'movie' and 'poster_url' in state,
+      // because I didn't find the method to set the props manually after the page refresh
+      if(sessionStorage.getItem('movie') && JSON.parse(sessionStorage.getItem('movie')).hasOwnProperty('_id')) {
+         this.state = {
+            _id: JSON.parse(sessionStorage.getItem('movie'))._id,
+            movie: JSON.parse(sessionStorage.getItem('movie')),
+            runtime: JSON.parse(sessionStorage.getItem('runtime')),
+            poster_url: JSON.parse(sessionStorage.getItem('poster_url')),
+            counter: 0
+         };
+      } else {
+         this.state = {
+            _id: this.props.location.state.movie._id,
+            movie: this.props.location.state.movie,
+            runtime: this.props.location.state.movie.info.runtime,
+            poster_url: this.props.location.state.poster_url,
+            counter: 0
+         };
+      }
+
       this.handleClick = this.handleClick.bind(this);
       this.updateMovie = this.updateMovie.bind(this);
       this.resetScaling = this.resetScaling.bind(this);
       this.scaleMovie = this.scaleMovie.bind(this);
+      this.setSessionStorage = this.setSessionStorage.bind(this);
       Info.scalePortrait = Info.scalePortrait.bind(this);
       Info.scaleLandscape = Info.scaleLandscape.bind(this);
+   }
+
+   componentDidMount() {
+      sessionStorage.clear();
+      window.addEventListener('beforeunload', this.setSessionStorage);                  // listener to detect page refresh
+   }
+
+   setSessionStorage() {                                                                // save state in browser session storage
+      sessionStorage.setItem('movie', JSON.stringify(this.state.movie));
+      sessionStorage.setItem('poster_url', JSON.stringify(this.state.poster_url));
+      sessionStorage.setItem('runtime', this.state.runtime);
    }
 
    componentWillUnmount() {
@@ -81,7 +110,7 @@ class Info extends React.Component {
             ul.css('cssText', `width:${i}px;`);
             ulShape = ul.height() / ul.width();                                            // updated ul shape
 
-            if ((scrShape - ulShape) < 0.1 && (scrShape - ulShape) > 0) {                  // if ul shape roughly matches the screen
+            if (Math.abs(scrShape - ulShape) < 0.05) {                  // if ul shape roughly matches the screen
                scale = window.screen.height / ul.height();                                 // calculate scale level
                ul.css('cssText', `zoom:${scale};`);                                        // and zoom the ul
                break;
@@ -93,7 +122,7 @@ class Info extends React.Component {
          for (let i = newUlWidth; i > (newUlWidth - 300); i--) {
             ul.css('cssText', `width:${i}px;`);
             ulShape = ul.height() / ul.width();
-            if ((scrShape - ulShape) < 0.1 && (scrShape - ulShape) > 0) {
+            if (Math.abs(scrShape - ulShape) < 0.05) {
                scale = window.screen.height / ul.height();
                ul.css('cssText', `zoom:${scale};`);
                break;
@@ -130,7 +159,7 @@ class Info extends React.Component {
          for (let i = newUlWidth; i < (newUlWidth + 300); i++) {
             ul.css('cssText', `width:${i}px;`);
             ulShape = ul.height() / ul.width();
-            if ((rightShape - ulShape) < 0.2 && (rightShape - ulShape) > 0) {
+            if (Math.abs(rightShape - ulShape) < 0.1) {
                scale = window.screen.height / ul.height();
                ul.css('cssText', `zoom:${scale};`);
                break;
@@ -143,7 +172,7 @@ class Info extends React.Component {
             ulShape = ul.height() / ul.width();
 
             // if form factors almost match, find ratio and scale 'movie'
-            if ((rightShape - ulShape) < 0.2 && (rightShape - ulShape) > 0) {
+            if (Math.abs(rightShape - ulShape) < 0.1) {
 
                scale = window.screen.height / ul.height();
                ul.css('cssText', `zoom:${scale};`);
@@ -182,35 +211,30 @@ class Info extends React.Component {
          year,
          overview,
          homepage,
-         genreString,
+         genreString = '',
          genres,
-         countryString,
+         countryString = '',
          countries,
          poster,
-         side_poster;
+         side_poster,
+         poster_url;
 
-      // if some field is updated by user and then the page is reloaded in the browser,
-      // the actual state will be lost and we need to make request to DB to get the updated document
-      if (String(window.performance.getEntriesByType('navigation')[0].type) === 'reload')
-         // Todo: get request to DB to get updated movie object and replace next line
-         movie = this.props.location.state.movie;
-      else
-         movie = this.props.location.state.movie;
+      movie = this.state.movie;
+      poster_url = this.state.poster_url;
 
       if (movie) {                                                                         // check movie properties and create elements
 
-         const poster_url = this.props.location.state.poster_url;                          // poster
          if (poster_url.length > 30) {
             poster = (
                <li className='list-group-item poster'>
-                  <img src={this.props.location.state.poster_url} className='info-poster'
+                  <img src={poster_url} className='info-poster'
                      onLoad={this.scaleMovie}
                      alt='Poster'/>
                </li>
             );
             side_poster = (
                <div className='info-left-col'>
-                  <img src={this.props.location.state.poster_url} className='side_poster' alt='Poster'/>
+                  <img src={poster_url} className='side_poster' alt='Poster'/>
                </div>
             );
          }

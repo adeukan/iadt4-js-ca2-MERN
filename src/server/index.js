@@ -4,22 +4,20 @@ const ObjectID = require('mongodb').ObjectID;
 const bodyParser = require('body-parser');
 
 const server = express();
-const dbname = 'IMDBLocal';
+server.use(express.static('dist'));                           // static files location
+server.use(bodyParser.urlencoded({extended: false}));         // used to parse the request body (api request may not work without it)
+server.use(bodyParser.json());
 
-server.use(express.static('dist'));
-
-const dbroute = process.env.DB_URL                            // URL to DB
+const dbname = 'IMDBLocal';                                   // if remote db is used, dbname specified at connection time
+const dbroute = process.env.DB_URL                            // URL to remote or local DB
     || `mongodb://localhost:27017/${dbname}`;
 
 let db;
 MongoClient.connect(dbroute, (err, client) => {               // start express server after connection to DB
    if (err) throw err;
    db = client.db(dbname);
-   server.listen(process.env.PORT || 8080, () => console.log(`Started on ${process.env.PORT}`));        // start server
+   server.listen(process.env.PORT || 8080, () => console.log(`Started on ${process.env.PORT}`));
 });
-
-server.use(bodyParser.urlencoded({extended: false}));         // used to parse the request body (api request may not work without it)
-server.use(bodyParser.json());
 
 server.get('/api/movies', (req, res) => {                     // endpoint to retrieve all movies from DB
    db.collection('movies').find().toArray((err, result) => {

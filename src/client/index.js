@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter, Route} from 'react-router-dom';
+import {HashRouter, Route} from 'react-router-dom';
 import axios from 'axios';
 import Movie from './Movie';
 import Info from './Info';
@@ -33,19 +33,19 @@ class MovieList extends React.Component {
             movie={movie}
          />
       ));
-      return (<div className='panel-body home-wrapper'> {movieList} </div>);
+      return (<div className='panel-body home-wrapper'>{movieList}</div>);
    }
 }
 
 class App extends React.Component {
    render() {                                                           // React Routes; Movie posters are used as Links
       return (
-         <BrowserRouter>
+         <HashRouter>
             <div className='main-wrapper'>
                <Route exact path='/' component={MovieList}/>
                <Route path='/info' component={Info}/>
             </div>
-         </BrowserRouter>
+         </HashRouter>
       );
    }
 }

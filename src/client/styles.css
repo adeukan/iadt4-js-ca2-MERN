@@ -146,6 +146,8 @@ li {
 @media (orientation: portrait) and (pointer: coarse) and (hover: none) {
     .info-wrapper {
         width: 100vw;
+        height:100vh;
+        vertical-align: middle;
     }
     .info-content {
         width: 100%;
@@ -154,10 +156,8 @@ li {
     ul {
         margin-left: auto;
         margin-right: auto;
+        padding: 0 !important;
         /*width:99%;*/
-    }
-    .panel-body {
-        padding: 0;
     }
 }
 
